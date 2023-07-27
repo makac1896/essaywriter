@@ -6,6 +6,10 @@ const Resource = require("../models/resourceModel");
 // Define an empty state object to store the messages
 let state = {};
 const msgCodes=["brag sheet", "common app checklist", "common app guide", "css profile student", "css profile", "essay why us 2", "essay why us", "harvard guide", "lor teacher", "northwestern guide", "princeton checklist", "ubc guide"];
+const schools =["Amherst","Brandeis", "Barnard", "Brown", "Bucknell", "Claremont","Colgate","Emory","LeHigh", "MIT","Pomona","Reed","Rice", "Richmond","Rochester","Swarthmore","Tufts", "UChicago", "NotreDame", "UWM", "Vanderbilt","Vassar", "WashU","Wellesley", "Columbia", "Cornell", "Dartmouth", "Harvard", "Northwestern", "Princeton", "Stanford", "Swarthmore", "Upenn", "Yale", ];
+
+//sort schools alphabetically
+
 
 const createEssay = async (userMsg, phoneNumber) => {
   try {
@@ -95,7 +99,7 @@ async function serverDelay() {
 }
 
 const fileURLGenerator = async (msgCode) => {
-  return `https://github.com/makac1896/collegeresources/blob/main/${msgCode.replaceAll(" ", "%20")}.pdf?raw=true`;
+  return `https://github.com/makac1896/collegeresources/blob/main/essays/${msgCode.replaceAll(" ", "%20")}.pdf?raw=true`;
 }
   
 const logicHandler = async (msgCode, phoneNumber)=>{
@@ -123,7 +127,7 @@ const logicHandler = async (msgCode, phoneNumber)=>{
     // console.log(resource);
     await sendMediaMessage(phoneNumber, msgCode, await fileURLGenerator(msgCode));
     // console.log(file.essayFiles);
-    await sendMessage(phoneNumber,`_information related to your request_\n\n` + await generateResponse(`Write a file description for ${msgCode}`, "simple"));
+    await sendMessage(phoneNumber,`⭐ _information related to your request_\n\n` + await generateResponse(`Write a file description for a file named "${msgCode}". Keep it less than 100 words`, "simple"));
     // await sendMessage(phoneNumber,`_information related to your request_\n\n` + await generateResponse(`Generate a pdf file description related to the following user request: `+ msgCode, "simple"));
   }else if(msgCode==="list schools")
   {
@@ -131,16 +135,20 @@ const logicHandler = async (msgCode, phoneNumber)=>{
     console.log("chibaba");
 
     let folders = await Resource.find({}, {objectName: 1});
-    console.log(folders);
+    // console.log(folders);
 
     let generatedMenu = `List of Supported Schools: \n\n`;
 
-    await folders.forEach((folder, index) => {
-      console.log(folder+ `-----`);
-      generatedMenu += `${index+1}. *${folder.objectName}* \n`;
+    // const folderNames = folders.map(folder=>folder.objectName);
+    // console.log(folderNames);
+
+    //print menu
+    schools.sort().forEach((folder, index) => {
+      // console.log(folder+ `-----`);
+      generatedMenu += `${index+1}. *${folder} Folder* \n`;
     });
 
-    generatedMenu += `\n*To view a  folder, simply type the folder name. For example "Harvard folder"*\n\n Type *"list schools"* to view this list again!`
+    generatedMenu += `\nTo view a folder, type: '_school + folder_' \n\n 🔎 Sample request: *harvard folder*\n\n Type *"list schools"* to view this list again! \n\n 🌐 _Additional Schools w/ Financial Aid for African Students_: *https://shorturl.at/oQTVZ*`
     
     await sendMessage(phoneNumber, generatedMenu);
   }
@@ -149,9 +157,17 @@ const logicHandler = async (msgCode, phoneNumber)=>{
     //   await sendMessage(phoneNumber,`_Your input was not recognised as a file request, please check your spelling._\n⚠️ ⚠️ ⚠️\n\nWe have redirected you to *dAVE*:\n\n` + AImessage);
     console.log("activated")
     // console.log(msgCode.toLowerCase().trim().split(" ").includes("folder"));
-    // const imgURL = await generateImage(msgCode.toLowerCase().trim().split(" ")[0]);
+    const imgURL = await generateImage(`Generate a van gogh style painting of a university campus`);
+    // await sendMediaMessage(phoneNumber, `University Campus for: ${msgCode.toLowerCase().trim().split(" ")[0]}}`, imgURL);
     await sendMessage(phoneNumber, await generateMenu(msgCode));
-}
+  } else if (msgCode.toLowerCase().trim()==="hello"){
+    const url = "https://github.com/makac1896/collegeresources/blob/main/his%20logo.png?raw=true";
+    await sendMediaMessage(phoneNumber, `Welcome to HIS Alumni! We strive to make your College process smoother, meet *dAVE*\n\n Our newest digital assistant to help you at every stage of the College process! \n\n _Built with passion, fueled by ambition!_ \n\n *Type "list schools" to see available resources*`, url);
+  }else{
+    await sendMessage(phoneNumber, `Your request: *${msgCode}*\n\n Files found: 0 \n--------\n ⚙️ Looks like we don't have that file yet, we will add it soon! \n\n ⭐ *Remember to double check your spelling :)*`);
+    // let AImessage = await generateResponse(`Respond to this in an informative and concise way: ${msgCode}`, "simple");
+    // await sendMessage(phoneNumber,`_Your input was not recognised as a file request, please check your spelling._\n⚠️ ⚠️ ⚠️\n\nWe have redirected you to *dAVE*:\n\n` + AImessage);
+  }
 
   // switch (msgCode) {
   //   case "harvard ps":

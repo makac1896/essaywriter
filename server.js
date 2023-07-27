@@ -29,7 +29,7 @@ app.post('/sms', async (req, res)=>{
     const userMessage = req.body.Body;
     const phoneNumber = req.body.From;
 
-    console.log(phoneNumber);
+    console.log(typeof(phoneNumber));
 
     await logicHandler(userMessage, phoneNumber);
 
@@ -55,8 +55,8 @@ app.listen(port, async ()=> {
     // sendMediaMessage("whatsapp:+12369939310", "Welcome, please review this document first!", "https://jmc.msu.edu/_assets/pdfs/academics/writing%20consultancy/write-personal-statement.pdf")
     //1000ms delay to send messages in correct order
     // serverDelay();
-    const url = "https://github.com/makac1896/collegeresources/blob/main/his%20logo.png?raw=true";
-    sendMediaMessage(null, `Welcome to HIS Alumni! We strive to make your College process smoother, meet *dAVE*\n\n Our newest digital assistant to help you at every stage of the College process! \n\n _Built with passion, fueled by ambition!_ \n\n *Type "list schools" to see available resources*`, url);
+    // const url = "https://github.com/makac1896/collegeresources/blob/main/his%20logo.png?raw=true";
+    // sendMediaMessage(null, `Welcome to HIS Alumni! We strive to make your College process smoother, meet *dAVE*\n\n Our newest digital assistant to help you at every stage of the College process! \n\n _Built with passion, fueled by ambition!_ \n\n *Type "list schools" to see available resources*`, url);
     // sendMessage("whatsapp:+12369939310", "Welcome to HIS Alumni")
     // sendMediaMessage("whatsapp:+12369939310", "_HIS Merit Scholarship Alumni_ \n📜~Fast, Accurate, Free! \n\n Please enter your essay title:", await getResource("harvard ps"));
     // sendMediaMessage("whatsapp:+12369939310", "_HIS Merit Scholarship Alumni_ \n📜~Fast, Accurate, Free! \n\n Please enter your essay prompt!", "https://i.ibb.co/G9Xx97V/przemyslaw-marczynski-T-tg8-Vc-DLJ8-unsplash.jpg");

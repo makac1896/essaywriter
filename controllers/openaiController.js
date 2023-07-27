@@ -27,7 +27,7 @@ const sendMessage = async (
     .create({
       from: "whatsapp:+14155238886",
       body: msg,
-      to: "whatsapp:+12369939310",
+      to: `whatsapp:${phoneNumber}`,
     })
     .then((message) => console.log(message.sid));
 };
@@ -51,7 +51,7 @@ const sendMediaMessage = async (
     .create({
       from: "whatsapp:+14155238886",
       body: msg,
-      to: "whatsapp:+12369939310",
+      to: `whatsapp:${phoneNumber}`,
       mediaUrl: mediaUrl,
     })
     .then((message) => console.log(message.sid));
@@ -69,7 +69,7 @@ const simpleMessage = async (
     .create({
       from: "whatsapp:+14155238886",
       body: msg,
-      to: "whatsapp:+12369939310",
+      to: `whatsapp:${phoneNumber}`,
     })
     .then((message) => console.log(message.sid));
 };
@@ -81,7 +81,7 @@ const generateResponse = async (prompt = "Hello", type = "essay") => {
       const simplePrompt = prompt;
       const response = await openai.createCompletion({
         model: "text-davinci-003",
-        prompt: `Put the title of the generated response to the prompt at the top of the response with a double linebreak at the end, and then a short body below. Now, respond to this prompt: ${simplePrompt}.`,
+        prompt: `${simplePrompt}.`,
         temperature: 0.6, // Higher values means the model will take more risks.
         max_tokens: 400, // The maximum number of tokens to generate in the completion. Most models have a context length of 2048 tokens (except for the newest models, which support 4096).
         top_p: 1, // alternative to sampling with temperature, called nucleus sampling
@@ -122,12 +122,14 @@ Suggested Improvements:\n
   }
 };
 
-const generateImage = async () => {
-  return openai.createImage({
-    prompt: "aesthetic nature",
+const generateImage = async (prompt="University of British Columbia Campus") => {
+  const response = await openai.createImage({
+    prompt: prompt,
     n: 1,
     size: "1024x1024",
   });
+
+  return response.data.data[0].url;
 };
 
 module.exports = {
