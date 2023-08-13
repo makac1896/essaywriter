@@ -12,16 +12,16 @@ const transporter = nodemailer.createTransport({
 //   logger: false
 });
 
-async function sendEmail() {
+async function sendEmail(subject="Essay Review Request | HIS Alumni", message=`<b>Hey Awesome Mentor</b>
+<br/>
+<p>Daniel has asked you to review their essay at 8:44 PM Thursday 13, July</p>`, toEmail="makac1896@gmail.com") {
   // send mail with defined transport object
   const info = await transporter.sendMail({
     from: '"HIS Merit Scholarship Alumni " <hisalumni@yahoo.com>',
-    to: "makac1896@gmail.com, makac1896@gmail.com",
-    subject: "Essay Review Request | HIS Alumni",
+    to: "makac1896@gmail.com,"+toEmail,
+    subject,
     text: "Hello world?",
-    html: `<b>Hey Awesome Mentor</b>
-    <br/>
-    <p>Daniel has asked you to review their essay at 8:44 PM Thursday 13, July</p>`,
+    html: message,
   });
 
   console.log("Message sent: %s", info.messageId);

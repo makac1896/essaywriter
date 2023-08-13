@@ -58,7 +58,7 @@ async function printDocTitle(auth) {
   console.log(`The title of the document is: ${res.data.title}`);
 }
 
-async function createDoc(auth, requestBody = {title: "Essay Review | Personal Statement"} ){
+async function createDoc(auth, requestBody = {title: "Essay Review | Personal Statement"}, prompt="sample", essayBody="sample" ){
     const drive = google.drive({ version: "v3", auth });
     const docs = google.docs({ version: "v1", auth });   
     const res = await docs.documents.create({
@@ -81,10 +81,13 @@ async function createDoc(auth, requestBody = {title: "Essay Review | Personal St
     console.log(`New doc created: https://docs.google.com/document/d/${newDocId}/edit`);
 
     //insert text into document
-    await insertText(newDocId, "Sample", "Lorem Ipsum", auth);
+    await insertText(newDocId, prompt, essayBody, auth);
+
+    //return an ID of newly created document
+    return newDocId;
 }
 
-const insertText= async (DOCUMENT_ID, prompt, essayBody, auth) => {
+const insertText= async (DOCUMENT_ID, prompt="sample", essayBody="sample", auth) => {
     const docs = google.docs({ version: 'v1', auth });
   
     try {
