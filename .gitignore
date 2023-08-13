@@ -1,1 +1,4 @@
 node_modules
+config.json
+credentials.json
+/config/google-docs-service-account.json

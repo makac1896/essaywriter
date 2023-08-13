@@ -23,14 +23,63 @@ const sendMessage = async (
   //   })
   //   .then((message) => console.log(message.sid));
 
-  client.messages
-    .create({
-      from: "whatsapp:+14155238886",
-      body: msg,
-      to: `whatsapp:${phoneNumber}`,
-    })
-    .then((message) => console.log(message.sid));
+  //for long messages
+  if (msg.length > 1500) {
+    //split message and then send it in segments
+    let segments = checkResponseLength(msg, phoneNumber);
+    await sendSegmentMessage(phoneNumber, segments);
+    // client.messages
+    //   .create({
+    //     from: "whatsapp:+14155238886",
+    //     body: `⏳ *Long Message Part 1.* \n--------\n\n ${segments[0]} \n\n 🌍 _response exceeds limit. to be continued in next message ..._`,
+    //     to: `whatsapp:${phoneNumber}`
+    //   })
+    //   .then(async (message) => {
+    //     await sendMessage(phoneNumber, `⏳ *Long Message Part 2.* \n--------\n\n ${segments[1]}`);
+    //     console.log(message.sid)
+    //   });
+  } else {
+    client.messages
+      .create({
+        from: "whatsapp:+14155238886",
+        body: msg,
+        to: `whatsapp:${phoneNumber}`,
+      })
+      .then((message) => console.log(message.sid));
+  }
 };
+
+// //function to send segmented messages without messing up memory and cache
+// const sendSegmentMessage = async(phoneNumber, segments)=> {
+//     segments.forEach(async (segment, index)=>{
+//       client.messages
+//       .create({
+//         from: "whatsapp:+14155238886",
+//         body: `⏳ *Long Message Part ${index+1}.* \n--------\n\n ${segment}`,
+//         to: `whatsapp:${phoneNumber}`
+//       })
+//       .then((message) => {
+//         console.log(message.sid);
+//       });
+//     })
+// }
+
+const sendSegmentMessage = async (phoneNumber, segments) => {
+  for (let index = 0; index < segments.length; index++) {
+    const segment = segments[index];
+    try {
+      const message = await client.messages.create({
+        from: "whatsapp:+14155238886",
+        body: `⏳ *Part ${index + 1}/${segments.length}* \n--------\n\n ${segment}`,
+        to: `whatsapp:${phoneNumber}`,
+      });
+      console.log(message.sid);
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+  }
+};
+
 
 //send media message
 //send a message
@@ -47,17 +96,33 @@ const sendMediaMessage = async (
   //   })
   //   .then((message) => console.log(message.sid));
   try {
-    client.messages
-    .create({
-      from: "whatsapp:+14155238886",
-      body: msg,
-      to: `whatsapp:${phoneNumber}`,
-      mediaUrl: mediaUrl,
-    })
-    .then((message) => console.log(message.sid));
+    if (msg.length > 1500) {
+      let segments = checkResponseLength(msg, phoneNumber);
+
+      (await segments).forEach(async (msg, index) => {
+        console.log(`Part ${index}/${segments.length()}. \n--------\n\n ${msg}`);
+        // client.messages
+        // .create({
+        //   from: "whatsapp:+14155238886",
+        //   body: msg,
+        //   to: `whatsapp:${phoneNumber}`,
+        //   mediaUrl: mediaUrl,
+        // })
+        // .then((message) => console.log(message.sid));
+      });
+    } else {
+      client.messages
+        .create({
+          from: "whatsapp:+14155238886",
+          body: msg,
+          to: `whatsapp:${phoneNumber}`,
+          mediaUrl: mediaUrl,
+        })
+        .then((message) => console.log(message.sid));
+    }
   } catch (error) {
     console.log(error);
-  } 
+  }
 };
 
 //send a message
@@ -98,7 +163,7 @@ Breakdown:\n
 • sample feedback point
 \n\n
 Suggested Improvements:\n 
-• sample improvement
+• sample improvement point
     `;
 
     const response = await openai.createCompletion({
@@ -122,7 +187,52 @@ Suggested Improvements:\n
   }
 };
 
-const generateImage = async (prompt="University of British Columbia Campus") => {
+// const checkResponseLength = async (msg="")=>{
+//   //split messages into segments of 1000 characters
+//   let segments = msg.match(/.{1,1000}/g)
+
+//   segments.forEach(async (msg, index) => {
+//     await sendMessage(phoneNumber, `Long Message Part ${index+1}. \n\n ${msg}`);
+//   })
+// }
+
+// const checkResponseLength = async (str,phoneNumber, maxLength = 1500) => {
+//   if (str.length <= maxLength) {
+//     return [str]; // No need to split, return the original string in an array
+//   }
+
+//   const wordRegex = /\b\w+\b/g;
+//   const words = str.match(wordRegex); // Extract words from the string
+
+//   const result = [];
+//   let currentChunk = "";
+
+//   for (const word of words) {
+//     const newLength = currentChunk.length + word.length + 1; // Add 1 for the space between words
+//     if (newLength <= maxLength) {
+//       currentChunk += (currentChunk.length === 0 ? "" : " ") + word;
+//     } else {
+//       result.push(currentChunk);
+//       currentChunk = word;
+//     }
+//   }
+
+//   if (currentChunk.length > 0) {
+//     result.push(currentChunk); // Add the last chunk to the result
+//   }
+
+//   return result;
+
+//   result.forEach(async (msg, index) => {
+//     console.log(
+//       `Long Message Part ${index + 1}. \n--------\n\n ${msg}`
+//     );
+//   });
+// };
+
+const generateImage = async (
+  prompt = "University of British Columbia Campus"
+) => {
   const response = await openai.createImage({
     prompt: prompt,
     n: 1,
@@ -132,10 +242,91 @@ const generateImage = async (prompt="University of British Columbia Campus") => 
   return response.data.data[0].url;
 };
 
+// function checkResponseLength (str, maxLength = 1500) {
+//   if (str.length <= maxLength) {
+//     return [str]; // No need to split, return the original string in an array
+//   }
+
+//   const index = str.lastIndexOf('\n', maxLength); // Find the most recent line break before maxLength
+
+//   if (index === -1) {
+//     // If there's no line break before maxLength, split at the maxLength
+//     return [str.slice(0, maxLength), str.slice(maxLength)];
+//   } else {
+//     // Otherwise, split at the line break
+//     return [str.slice(0, index), str.slice(index + 1)];
+//   }
+// }
+
+// function checkResponseLength(str, maxLength = 1500) {
+//   if (str.length <= maxLength) {
+//     return [str]; // No need to split, return the original string in an array
+//   }
+
+//   const index = Math.max(str.lastIndexOf(' ', maxLength), str.lastIndexOf('\n', maxLength));
+//   if (index === -1) {
+//     // If there's no space or line break before maxLength, split at the maxLength
+//     return [str.slice(0, maxLength), str.slice(maxLength)];
+//   } else {
+//     // Otherwise, split at the space or line break
+//     return [str.slice(0, index), str.slice(index + 1)];
+//   }
+// }
+
+function checkResponseLength(inputString) {
+  const maxLength = 1000;
+  const segments = [];
+
+  let currentSegment = "";
+  let lastLineBreakIndex = -1;
+  for (let i = 0; i < inputString.length; i++) {
+    currentSegment += inputString[i];
+
+    if (inputString[i] === "***") {
+      lastLineBreakIndex = i;
+    }
+
+    if (currentSegment.length >= maxLength) {
+      if (lastLineBreakIndex === -1) {
+        lastLineBreakIndex = i;
+        // If no line break found, split at maxLength
+      }
+
+      segments.push(inputString.substring(0, lastLineBreakIndex + 1).trim());
+      inputString = inputString.substring(lastLineBreakIndex + 1);
+      currentSegment = "";
+      lastLineBreakIndex = -1;
+      i = 0;
+      // Start over the loop with the remaining inputString
+    }
+  }
+
+  if (currentSegment.length > 0) {
+    segments.push(currentSegment.trim());
+  }
+
+  return segments;
+}
+
+function getRandomElementFromArray(array) {
+  const randomIndex = Math.floor(Math.random() * array.length);
+  return array[randomIndex];
+}
+
+// Function to check if any object in the array matches the specified field and value
+function checkArrayByField(arr, field, value) {
+  return arr.some((obj) => obj[field] === value);
+}
+
+
+
+
 module.exports = {
   sendMessage,
   simpleMessage,
   sendMediaMessage,
   generateResponse,
-  generateImage
+  generateImage,
+  getRandomElementFromArray,
+  checkArrayByField
 };

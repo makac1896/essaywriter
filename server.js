@@ -1,11 +1,18 @@
 const express = require('express');
 const dotenv = require('dotenv').config();
 const bodyParser = require('body-parser');
+const process = require('process');
 const port = process.env.PORT || 5000;
 const connectDB = require('./config/db');
 const { createEssay, serverDelay, logicHandler, fileURLGenerator } = require("./controllers/devController");
 const { sendMessage, simpleMessage, sendMediaMessage, generateResponse } = require("./controllers/openaiController");
-const {sendEmail }=require("./config/nodemailer")
+const {sendEmail }=require("./config/nodemailer");
+
+//google docs config
+const {authorize} = require("./config/google");
+
+//authorize and initialize API
+authorize()
 
 //aws
 const { awsBoot, getResource } = require('./config/aws');
@@ -25,11 +32,14 @@ app.use(bodyParser.json());
 // parse application/x-www-form-urlencoded, basically can only parse incoming Request Object if strings or arrays
 app.use(bodyParser.urlencoded({ extended: false }));
 
+
+//api requests
 app.post('/sms', async (req, res)=>{
     const userMessage = req.body.Body;
     const phoneNumber = req.body.From;
 
-    console.log(typeof(phoneNumber));
+    console.log(typeof(phoneNumber)
+    );
 
     await logicHandler(userMessage, phoneNumber);
 
@@ -51,6 +61,10 @@ app.post('/sms', async (req, res)=>{
 
 app.listen(port, async ()=> {
     console.log(`Server started on port ${port}`);
+    // await createGoogleDoc("test document").catch((err)=>{
+    //     console.error('Error:', err.message)
+    // });
+
     // sendMessage("whatsapp:+12369939310", "Before you start, check this out! \n\n ⬇️⬇️⬇️⬇️⬇️⬇️")
     // sendMediaMessage("whatsapp:+12369939310", "Welcome, please review this document first!", "https://jmc.msu.edu/_assets/pdfs/academics/writing%20consultancy/write-personal-statement.pdf")
     //1000ms delay to send messages in correct order
