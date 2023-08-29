@@ -188,8 +188,8 @@ const convertGoogleDocURL = async (googleDocId)=> {
 }
 
 
-authorize().then(createDoc).catch(console.error);
-authorize().then(printDocTitle).catch(console.error);
+// authorize().then(createDoc).catch(console.error);
+// authorize().then(printDocTitle).catch(console.error);
 
 module.exports = {
   authorize,

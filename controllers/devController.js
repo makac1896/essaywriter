@@ -1,10 +1,16 @@
 const { getResource } = require("../config/aws");
+const State = require("../models/stateModel");
+const {processState} = require("../controllers/stateManager");
 const { sendMessage, sendMediaMessage } = require("./openaiController");
 const { generateResponse, generateImage, getRandomElementFromArray, checkArrayByField } = require("./openaiController");
 const Resource = require("../models/resourceModel");
 
+//diagnostics
+const {generateDiagnosticReport} = require("./diagnostics/diagnosticController")
+
 //google APIs
 const {  authorize, createDoc, printDocTitle, convertGoogleDocURL } = require("../config/google");
+const { listSchools, getAmbassadors, elementExistsInBothArrays, hasMultipleCommonElements } = require("./ambassadorController");
 
 // Define an empty state object to store the messages
 let state = {};
@@ -382,7 +388,16 @@ const logicHandler = async (msgCode, phoneNumber) => {
         ))
     );
     // await sendMessage(phoneNumber,`_information related to your request_\n\n` + await generateResponse(`Generate a pdf file description related to the following user request: `+ msgCode, "simple"));
-  } else if (msgCode === "list schools") {
+  }else if(msgCode==="essay review"){
+    //user begins essay review process here
+    // userState.state.step = "default state";
+    // await processState(userState.state.step, msgCode, phoneNumber);
+  } 
+  else if(msgCode==="skip"){
+    //do nothing and wait for next request
+    console.log("Skip logic")
+  } 
+  else if (msgCode === "list schools") {
     //generate a menu and send it to user
     console.log("chibaba");
 
@@ -435,7 +450,7 @@ const logicHandler = async (msgCode, phoneNumber) => {
     const url = "https://i.imgur.com/RsFiGWk.png";
     await sendMediaMessage(
       phoneNumber,
-      `*Quick Start Menu 🚀* \n\n 1. Type _*list schools*_ to view essay resources 📑 \n\n 2. Type _*list aid*_ to access financial aid resources 💸 \n\n 3. Type _*blog menu*_ to access our blog 📚 \n\n 4. Type _*video menu*_ to access Video resources 📽️\n\n 5. Type _*essay review*_ to request essay feedback _(beta)_ 🚧`,
+      `*Quick Start Menu 🚀* \n\n 1. Type _*list schools*_ to view essay resources 📑 \n\n 2. Type _*list aid*_ to access financial aid resources 💸 \n\n 3. Type _*blog menu*_ to access our blog 📚 \n\n 4. Type _*video menu*_ to access Video resources 📽️\n\n 5. Type _*view ambassadors*_ to access Mentor profiles \n\n 6. Type _*essay review*_ to request essay feedback _(beta)_ 🚧`,
       url
     );
   }else if(checkArrayByField(videos, "msgCode", msgCode)){
@@ -453,14 +468,52 @@ const logicHandler = async (msgCode, phoneNumber) => {
     //call review function and print error if neccessary
       await createNewEssayRequest(msgCode, phoneNumber).catch(err => console.log(err));
   }
+  else if(msgCode==="view ambassadors"){
+    //send request to Ambassador Controller
+    await listSchools(phoneNumber);
+  }
+  //check if student has requested to view a mentor profile
+  else if(msgCode.toLowerCase().trim().split(" ").includes("view") && msgCode.toLowerCase().trim().split(" ").includes("ambassadors") && hasMultipleCommonElements(schools, msgCode.trim().split(" "))){
+    console.log('It works');
+    await sendMessage(phoneNumber, 'It works!');
+  }
   else {
     // await sendMessage(
     //   phoneNumber,
     //   `Your request: *${msgCode}*\n\n Files found: 0 \n--------\n ⚙️ Looks like we don't have that file yet, we will add it soon! \n\n ⭐ *Remember to double check your spelling :)*`
     // );
-    let AImessage = await generateResponse(`Respond to this in an informative and concise way: ${msgCode}`, "simple");
-    await sendMessage(phoneNumber,`_Your input was not recognised as a file request, please check your spelling._\n⚠️ ⚠️ ⚠️\n\nWe have redirected you to *dAVE*:\n\n` + AImessage);
+
+    //Disable for Development Only
+    // let AImessage = await generateResponse(`Respond to this in an informative and concise way: ${msgCode}`, "simple");
+    // await sendMessage(phoneNumber,`_Your input was not recognised as a file request, please check your spelling._\n⚠️ ⚠️ ⚠️\n\nWe have redirected you to *dAVE*:\n\n` + AImessage);
   }
+
+    //check message state here
+    var userState = await State.findOne({phoneNumber});
+  
+    if(!userState){
+      //user does not have any registered state
+      userState = new State({
+        phoneNumber,
+        state: {
+          step: "default state",
+          data:{},
+        }
+      })
+      console.log("no state exists")
+    }else{
+      console.log(userState.state);
+      console.log("state exists")
+    }
+  
+    //pre-processing state
+    await userState.save().then(console.log(userState))
+  
+    console.log(`CURRENT STATE: `+ userState.state.step);
+  
+    //call state function to process and execute appropriate logic
+    await processState(msgCode, phoneNumber);
+    await generateDiagnosticReport(msgCode, phoneNumber);
 
   // switch (msgCode) {
   //   case "harvard ps":

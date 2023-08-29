@@ -19,6 +19,12 @@ const mentorSchema = mongoose.Schema({
   mentorID: {
     type: String,
   },
+  mentorPhoto: {
+    type: String,
+  },
+  school: {
+    type: String,
+  },
   dateJoined: {
     type: Date,
     default: Date.now,

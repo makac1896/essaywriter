@@ -13,11 +13,8 @@ const essaySchema = mongoose.Schema({
       essayBody: {
         type: String
       },
-      mentorPhoneNumber: {
-        type: String
-      },
-      mentorEmail: {
-        type: String
+      mentors: {
+        type: [Object] //assigned mentors are stored as an array of objects
       },
       dateJoined: {
         type: Date,

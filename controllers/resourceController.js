@@ -1,7 +1,7 @@
 const { google } = require('googleapis');
 const fs = require('fs');
 
-// Replace with your actual document ID and credentials file path
+// Document ID and credentials file path
 const DOCUMENT_ID = 'your_document_id';
 const CREDENTIALS_PATH = 'path_to_your_credentials.json';
 

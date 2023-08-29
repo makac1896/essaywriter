@@ -66,7 +66,7 @@ app.listen(port, async ()=> {
     console.log(`Server started on port ${port}`);
 
     //development only
-    requestEssayFeedback("+12369939310", "Sample", "Sample Prompt");
+    // requestEssayFeedback("+12369939310", "Sample", "Sample Prompt");
 
     // await createGoogleDoc("test document").catch((err)=>{
     //     console.error('Error:', err.message)

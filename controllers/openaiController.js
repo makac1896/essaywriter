@@ -154,6 +154,7 @@ const generateResponse = async (prompt = "Hello", type = "essay") => {
         presence_penalty: 0, // Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.
       });
 
+      
       return `*You are talking to:* Dave \n _alumni@HIS_ \n\n *${response.data.choices[0].text}`;
     }
 

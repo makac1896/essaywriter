@@ -2,6 +2,8 @@ const {createDoc, authorize, convertGoogleDocURL} = require("../config/google");
 const {sendEmail} = require("../config/nodemailer");
 const Mentor = require("../models/mentorSchema");
 const User = require("../models/userSchema");
+const Essay = require("../models/essayModel");
+const { simpleMessage } = require("./openaiController");
 
 const devMentors = [
     {mentorPhoneNumber: "+12369939310", mentorName: "Makatendeka Chikumbu", tags: ["tech", "scholarships"], mentorEmail: "makac1896@gmail.com"}
@@ -82,6 +84,16 @@ const requestEssayFeedback = async (phoneNumber, essayBody, prompt)=>{
         console.log(`DOCUMENT ID IS: ${docID}`);
         documentURL = await convertGoogleDocURL(documentID);
 
+        //save essay to database
+        const saveEssay = Essay.create({
+            studentPhoneNumber: phoneNumber,
+            essayTitle: prompt,
+            essayBody,
+            mentors
+        });
+
+        console.log(await saveEssay);
+
         //send emails out to mentors 
     mentors.forEach(async (match) => {
         //template email
@@ -121,9 +133,10 @@ const requestEssayFeedback = async (phoneNumber, essayBody, prompt)=>{
 
     //send actual email to mentor
     await sendEmail("New Essay Review Request Received | HIS Alumni", msg, match.mentorEmail);
+    await simpleMessage(phoneNumber, `A new essay review request has been received. Kindly track feedback here: \n\n 🔗: ${documentURL}`)
     });  
 
-        // Now you can use the documentUrl variable as needed
+    // Now you can use the documentUrl variable as needed
         console.log('Document ID:', docID);
     })
     .catch(error => {
