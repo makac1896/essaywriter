@@ -7,6 +7,9 @@ const connectDB = require('./config/db');
 const { createEssay, serverDelay, logicHandler, fileURLGenerator } = require("./controllers/devController");
 const { sendMessage, simpleMessage, sendMediaMessage, generateResponse } = require("./controllers/openaiController");
 const {sendEmail }=require("./config/nodemailer");
+const Message = require("./models/messageSchema");
+const Student = require("./models/studentModel");
+const {registerUser} = require("./controllers/functions/registerStudent");
 
 //development only
 const {matchMentor, requestEssayFeedback} = require("./controllers/essayController");
@@ -45,6 +48,9 @@ app.post('/sms', async (req, res)=>{
     );
 
     await logicHandler(userMessage, phoneNumber);
+
+
+
 
     // if(logicHandler(userMessage, phoneNumber)===false){
     //     await createEssay(userMessage, phoneNumber);

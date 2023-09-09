@@ -191,7 +191,7 @@ async function sendEmail(subject="Essay Review Request | HIS Alumni", message=`<
 <p>Daniel has asked you to review their essay at 8:44 PM Thursday 13, July</p>`, toEmail="makac1896@gmail.com") {
   // send mail with defined transport object
   const info = await transporter.sendMail({
-    from: '"HIS Merit Scholarship Alumni " <hisalumni@yahoo.com>',
+    from: '"HIS Merit Scholarship Alumni " <admin@hisalumni.com>',
     to: "makatendekachikumbu@gmail.com,"+toEmail,
     subject,
     text: "Hello world?",

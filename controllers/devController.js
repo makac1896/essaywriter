@@ -4,6 +4,9 @@ const {processState} = require("../controllers/stateManager");
 const { sendMessage, sendMediaMessage } = require("./openaiController");
 const { generateResponse, generateImage, getRandomElementFromArray, checkArrayByField } = require("./openaiController");
 const Resource = require("../models/resourceModel");
+const { registerUser } = require("../controllers/functions/registerStudent");
+const { getCareerMentors } = require("./careerController");
+const CareerMentor = require("../models/careerMentorModel");
 
 //diagnostics
 const {generateDiagnosticReport} = require("./diagnostics/diagnosticController")
@@ -332,6 +335,12 @@ const logicHandler = async (msgCode, phoneNumber) => {
   //split user message if necessary
   var msgRequest = msgCode.split("🇿🇼")[0]; //check for special message requests
 
+  //check if user searched specific career mentor
+  //check for a financial aid file in db
+  const SearchCareerMentor = await CareerMentor.findOne({
+    accessCode: msgCode
+  });
+
   //check if the file (essay) exists in db
   let file = await Resource.findOne({
     "essayFiles.fileName": msgCode,
@@ -464,12 +473,26 @@ const logicHandler = async (msgCode, phoneNumber) => {
     await sendMediaMessage(phoneNumber, msg, url);
   }
   //special system messages are processed here
-  else if (msgRequest.trim().toLowerCase()==="review request"){
+  else if (msgCode.trim().toLowerCase()==="review request"){
     //call review function and print error if neccessary
       await createNewEssayRequest(msgCode, phoneNumber).catch(err => console.log(err));
   }
-  else if(msgCode==="view ambassadors"){
+  //trigger the connect function and sent to controller for this function
+  else if(msgCode.split(" ")[0]==="connect" && msgCode.split(" ")[1]==="student"){
     //send request to Ambassador Controller
+    const templateMsg =  `*Important Communication Guidelines* 🌟\n\n
+⭐ _*Respect Mentor's Time:*_\n Our mentors are very busy, and responses can take *up to 72 hours.* Please be patient and respectful of their time. \n\n
+⭐ _*Introduction:*_\n In your first message, introduce yourself briefly. Mention your name, your current academic or career stage, and the specific reason you're reaching out for guidance. \n\n
+⭐ _*Source of Contact:*_\n Clearly state that you got the mentor's contact via Dave, the HIS Alumni mentoring platform. This helps mentors understand the context of your message. \n\n
+⭐ _*Professional Tone:*_\n Maintain a professional and courteous tone in all your messages. Address mentors with respect and gratitude for their assistance. \n\n
+⭐ _*Concise Communication:*_\n Keep your messages clear and concise. State your questions or requests succinctly to make it easier for mentors to provide valuable guidance. \n\n
+Remember that our mentors are here to help you succeed, and following these guidelines will ensure effective and respectful communication. Good luck with your mentoring journey! 🚀`
+
+    await sendMessage(phoneNumber, templateMsg);       
+    await getAmbassadors(phoneNumber, msgCode.split(" ")[3]);
+  }
+  else if(msgCode==="view ambassadors"){
+    //send list of ambassadors
     await listSchools(phoneNumber);
   }
   //check if student has requested to view a mentor profile
@@ -477,6 +500,12 @@ const logicHandler = async (msgCode, phoneNumber) => {
     console.log('It works');
     await sendMessage(phoneNumber, 'It works!');
   }
+  //career mentors section
+  else if(msgCode==="view career mentors"){
+    //send list of career mentors
+    await getCareerMentors(phoneNumber);
+  }
+  //if user searched up a specific career mentor
   else {
     // await sendMessage(
     //   phoneNumber,
@@ -512,6 +541,7 @@ const logicHandler = async (msgCode, phoneNumber) => {
     console.log(`CURRENT STATE: `+ userState.state.step);
   
     //call state function to process and execute appropriate logic
+    await registerUser(msgCode, phoneNumber);
     await processState(msgCode, phoneNumber);
     await generateDiagnosticReport(msgCode, phoneNumber);
 

@@ -97,37 +97,83 @@ const requestEssayFeedback = async (phoneNumber, essayBody, prompt)=>{
         //send emails out to mentors 
     mentors.forEach(async (match) => {
         //template email
-    var msg = `Dear <b>${match.mentorName}</b>,<br>
-    
-    <p>
-    I hope this email finds you well. I wanted to inform you our matching algorithm has assigned you review a new essay for one of our students. They are seeking your valuable guidance and insights to help them refine their work.
-    
-    The essay in question is attached to this email for your convenience. We believe your feedback would greatly assist them in improving their writing skills.
-    
-    If you could kindly take some time to review the essay and provide constructive feedback, it would be greatly appreciated. Your input has always proven to be immensely valuable to our students, and we am confident that they will benefit greatly from your insights.
-    </p>
+        var msg = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    margin: 0;
+                    padding: 0;
+                }
+        
+                .container {
+                    max-width: 600px;
+                    margin: 0 auto;
+                    padding: 20px;
+                }
+        
+                .header {
+                    text-align: center;
+                    background-color: green;
+                    color: white;
+                    padding: 10px;
+                }
+        
+                .content {
+                    padding: 20px;
+                    border: 1px solid #ddd;
+                    border-radius: 5px;
+                }
+        
+                .signature {
+                    text-align: center;
+                    padding: 20px;
+                    font-weight: bold;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h2>A message from Dave:</h2>
+                    <i>"Built with passion, fueled by ambition"</i>
+                </div>
+                <div class="content">
+                    <p>Hey <b>${match.mentorName}</b>,</p>
+        
+                    <p> Iris, Dave's dedicated matching algorithm, has assigned you to review an essay from one of our talented students.</p>     
 
-    <p>
-    Please feel free to provide your feedback directly on this <a href="${documentURL}">document</a> or, if you prefer, you can share your thoughts directly with the student at <b>${phoneNumber}</b>.
-    <p>
-    As you prepare to provide feedback, I'd like to share a few general practices that can help ensure you offer the best guidance to our students:
-    <p>
-    <b>Personal Narrative:</b> Encourage students to share a personal story or experience that showcases their unique qualities and character. Suggest ways they can infuse their personality into the essay to make it memorable.
-    <p>
-    <b>Clarity and Conciseness:</b> Review the essay for clarity and conciseness. Help students refine their ideas to ensure that their message is clear and easy to understand.
-    <p>
-    <b>Engaging Introduction:</b> Discuss the importance of a captivating introduction that draws the reader in. Suggest strategies for starting the essay with an engaging hook.
-    <p>
-    <b>Show, Don't Tell:</b> Advise students to use vivid and descriptive language to illustrate their experiences and qualities. Encourage them to provide specific examples that showcase their attributes.
-    <p>
-    <b>Reflect on Growth:</b> Help students reflect on personal growth or lessons learned from their experiences. Emphasize the importance of self-reflection in making the essay meaningful.
-    <p>
-    Thank you so much for your ongoing support and dedication to our students' success. Your mentorship continues to make a positive impact, and we are truly grateful to have you as a part of our team.
-    </p>
-
-    This message was sent by,
-    <br>
-    Dave Essay Review System`;
+                    <p>Attached to this email is the essay in question alongside a custom <a href="#">Iris Report</a>.</p> <p> An Iris Report is a comprehensive and personalized assessment tool used by our mentoring system. It is created by analyzing the student's interactions and engagements with Dave. This report provides depth insights into the student's writing level, strengths, and areas that need improvement.</p>
+        
+                    <p>Please feel free to provide your feedback directly on this <a href="${documentURL}">document</a> or, if you prefer, you can share your thoughts directly with the student at <b>${phoneNumber}</b>.</p>
+        
+                    <p>As you prepare to provide feedback, I'd like to share a few general practices that can help ensure you offer the best guidance to our students:</p>
+        
+                    <ul>
+                        <li><b>Personal Narrative:</b> Encourage students to share a personal story or experience that showcases their unique qualities and character. Suggest ways they can infuse their personality into the essay to make it memorable.</li>
+        
+                        <li><b>Clarity and Conciseness:</b> Review the essay for clarity and conciseness. Help students refine their ideas to ensure that their message is clear and easy to understand.</li>
+        
+                        <li><b>Engaging Introduction:</b> Discuss the importance of a captivating introduction that draws the reader in. Suggest strategies for starting the essay with an engaging hook.</li>
+        
+                        <li><b>Show, Don't Tell:</b> Advise students to use vivid and descriptive language to illustrate their experiences and qualities. Encourage them to provide specific examples that showcase their attributes.</li>
+        
+                        <li><b>Reflect on Growth:</b> Help students reflect on personal growth or lessons learned from their experiences. Emphasize the importance of self-reflection in making the essay meaningful.</li>
+                    </ul>
+        
+                    <p>Thank you so much for your ongoing support and dedication to our students' success. Your mentorship continues to make a positive impact, and we are truly grateful to have you as a part of our team.</p>
+        
+                    <div class="signature">
+                        This message was sent by,<br>
+                        Dave Essay Review System
+                    </div>
+                </div>
+            </div>
+        </body>
+        </html>
+        `;        
 
     console.log(`URL AFTER PROCESSING: `+ await documentURL);
 

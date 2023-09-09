@@ -10,6 +10,9 @@ const stateSchema = mongoose.Schema({
       diagnosticState: {
         type: Object
       },
+      registrationState: {
+        type: Object
+      },
       dateJoined: {
         type: Date,
         default: Date.now

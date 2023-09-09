@@ -1,0 +1,132 @@
+[
+  {
+    "mentorPhoneNumber": "+12369939310",
+    "mentorName": "Douglas Important",
+    "tags": [
+      "Finance",
+      "Developmental Economics",
+      "Software Development"
+    ],
+    "mentorDescription": "I am a recent graduate of Harvard University where I obtained a bachelor's degree with High Honours in Chemistry with a sustained interest in both chemical theory and research. I also have a minor in Economics. I was born in Harare, Zimbabwe. My life's goal is to revolutionise healthcare and development in my home country Zimbabwe. I am pursuing a Master's Degree in Chemical Engineering from The University of Cambridge. I am passionate about Healthcare and Energy and I want to dedicate my life to building sustainable systems in both fields. I believe the future of healthcare in Africa is low-cost diagnostics! Every year millions of Africans go untreated because of severe under-diagnosis due to either cost or availability constraints of diagnostic tools. I want to change that. I want to acquire all the tools needed to start my own low-cost diagnostics company to span across the continent.",
+    "mentorEmail": "douglas.important@gmail.com",
+    "employmentStatus": "Product Manager at Google",
+    "accessCode": "view career mentor douglas important"
+  },
+  {
+    "mentorPhoneNumber": "+12345678901",
+    "mentorName": "Emily Johnson",
+    "tags": [
+      "Medicine",
+      "Public Health",
+      "Medical Research"
+    ],
+    "mentorDescription": "I am a medical doctor with over 10 years of experience in the field of medicine and public health. I have worked on various projects related to infectious diseases and vaccine development. I am passionate about mentoring young minds and guiding them in their journey towards a career in medicine or public health. Feel free to reach out to me for advice and guidance.",
+    "mentorEmail": "emily.johnson@example.com",
+    "employmentStatus": "Chief Medical Officer at a Public Health Organization",
+    "accessCode": "view career mentor emily johnson"
+  },
+  {
+    "mentorPhoneNumber": "+9876543210",
+    "mentorName": "David Smith",
+    "tags": [
+      "Engineering",
+      "Aerospace",
+      "Robotics"
+    ],
+    "mentorDescription": "I am an aerospace engineer with a strong background in robotics and automation. I have worked on projects ranging from designing drones for agricultural use to developing autonomous systems for space exploration. I am enthusiastic about inspiring young minds to pursue a career in engineering and robotics. Let's explore the fascinating world of engineering together!",
+    "mentorEmail": "david.smith@example.com",
+    "employmentStatus": "Lead Engineer at SpaceX",
+    "accessCode": "view career mentor david smith"
+  },
+  {
+    "mentorPhoneNumber": "+1122334455",
+    "mentorName": "Sarah Miller",
+    "tags": [
+      "Environmental Science",
+      "Sustainability",
+      "Conservation"
+    ],
+    "mentorDescription": "I am an environmental scientist dedicated to preserving our planet's natural resources. I have conducted research on sustainable agriculture practices and conservation efforts. I am eager to mentor high school students interested in environmental science and sustainability. Together, we can make a positive impact on the environment.",
+    "mentorEmail": "sarah.miller@example.com",
+    "employmentStatus": "Environmental Scientist at a Conservation Organization",
+    "accessCode": "view career mentor sarah miller"
+  },
+  {
+    "mentorPhoneNumber": "+9876543210",
+    "mentorName": "Michael Brown",
+    "tags": [
+      "Computer Science",
+      "Artificial Intelligence",
+      "Machine Learning"
+    ],
+    "mentorDescription": "I am a computer scientist specializing in artificial intelligence and machine learning. I have worked on cutting-edge projects in AI and am excited to mentor students interested in this field. Let's explore the world of algorithms and data together!",
+    "mentorEmail": "michael.brown@example.com",
+    "employmentStatus": "AI Researcher at a Tech Company",
+    "accessCode": "view career mentor michael brown"
+  },
+  {
+    "mentorPhoneNumber": "+1122334455",
+    "mentorName": "Laura Davis",
+    "tags": [
+      "Architecture",
+      "Urban Planning",
+      "Design"
+    ],
+    "mentorDescription": "I am an architect and urban planner with a passion for creating sustainable and innovative designs. I have worked on urban revitalization projects and sustainable architecture. If you're interested in the world of architecture and design, I'm here to guide you on your journey.",
+    "mentorEmail": "laura.davis@example.com",
+    "employmentStatus": "Principal Architect at an Architecture Firm",
+    "accessCode": "view career mentor laura davis"
+  },
+  {
+    "mentorPhoneNumber": "+9876543210",
+    "mentorName": "James Wilson",
+    "tags": [
+      "Finance",
+      "Investment Banking",
+      "Economics"
+    ],
+    "mentorDescription": "I have over 15 years of experience in the world of finance and investment banking. I have worked on mergers and acquisitions, investment strategies, and financial analysis. If you're interested in finance and economics, I can provide valuable insights and guidance.",
+    "mentorEmail": "james.wilson@example.com",
+    "employmentStatus": "Vice President of Investment Banking at a Financial Institution",
+    "accessCode": "view career mentor james wilson"
+  },
+  {
+    "mentorPhoneNumber": "+1122334455",
+    "mentorName": "Maria Rodriguez",
+    "tags": [
+      "Marketing",
+      "Digital Marketing",
+      "Brand Strategy"
+    ],
+    "mentorDescription": "I am a marketing professional with a background in digital marketing and brand strategy. I have worked with both startups and established companies to develop effective marketing campaigns. If you're interested in the world of marketing, I'm here to help you navigate it.",
+    "mentorEmail": "maria.rodriguez@example.com",
+    "employmentStatus": "Marketing Manager at a Tech Startup",
+    "accessCode": "view career mentor maria rodriguez"
+  },
+  {
+    "mentorPhoneNumber": "+9876543210",
+    "mentorName": "John Smith",
+    "tags": [
+      "Psychology",
+      "Mental Health Counseling",
+      "Therapy"
+    ],
+    "mentorDescription": "I am a licensed psychologist with expertise in mental health counseling and therapy. I have helped individuals overcome various mental health challenges and improve their well-being. If you're interested in psychology and counseling, I'm here to provide guidance and support.",
+    "mentorEmail": "john.smith@example.com",
+    "employmentStatus": "Clinical Psychologist in Private Practice",
+    "accessCode": "view career mentor john smith"
+  },
+  {
+    "mentorPhoneNumber": "+1122334455",
+    "mentorName": "Nancy Lee",
+    "tags": [
+      "Education",
+      "Teaching",
+      "Curriculum Development"
+    ],
+    "mentorDescription": "I am an educator with a passion for teaching and curriculum development. I have experience working in both traditional and online education settings. If you're interested in pursuing a career in education, I can offer valuable insights and advice.",
+    "mentorEmail": "nancy.lee@example.com",
+    "employmentStatus": "Director of Curriculum Development at an Education Institution",
+    "accessCode": "view career mentor nancy lee"
+  }
+]

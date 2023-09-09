@@ -4,7 +4,7 @@ const Ambassadors = require('../models/mentorSchema');
 
 //for testing purposes only
 const devAmbassadors = [
-    {mentorID: '0001', mentorName: 'John Doe',tags: ['tech', 'finance'], mentorEmail: 'abc@gmail.com',mentorDescription: 'My name is John, a second year university at Cornell.', mentorPhoto: 'https://imgur.com/a/BVhGXZa'}
+    {mentorID: '0001',PhoneNumber: '+12369939310', mentorName: 'John Doe',tags: ['tech', 'finance'], mentorEmail: 'abc@gmail.com',mentorDescription: 'My name is Tafara, I am currently a Second year student at UBC Vancouver. I am studying Mechanical Engineering and am willing to answer any questions related to studying here at UBC!', mentorPhoto: 'http://tinyurl.com/48s8uzf8'}
 ]
 
 const universityEmojis = [
@@ -66,32 +66,37 @@ const schools = [
 const getAmbassadors = async (phoneNumber, school='ubc')=>{
     //get list of all ambassadors   
 
-    // var ambassadors = await Ambassadors.find({
-    //     school
-    // })
+    var ambassadors = await Ambassadors.find({
+        school
+    })
 
-    var ambassadors = devAmbassadors;
+    // var ambassadors = devAmbassadors;
 
     if(!ambassadors){
         //no ambassadors available for this school
         var msg =  `Unfortunately we do not yet have volunteers from this school. We have sent a request to our Recruitment team to resolve this!`;
     }else{
-        var msg = '';
+        // const templateMsg =  `*Important Guidelines*\n\n⭐_Our mentors are very busy, and responses can take *up to 72hrs.*_ \n\n ⭐In your first message, introduce yourself and clearly state you got the Mentor's contact via Dave.`;
+        const templateMsg =  `*Important Communication Guidelines* 🌟\n\n
+⭐ _*Respect Mentor's Time:*_\n Our mentors are very busy, and responses can take *up to 72 hours.* Please be patient and respectful of their time. \n\n
+⭐ _*Introduction:*_\n In your first message, introduce yourself briefly. Mention your name, your current academic or career stage, and the specific reason you're reaching out for guidance. \n\n
+⭐ _*Source of Contact:*_\n Clearly state that you got the mentor's contact via Dave, the HIS Alumni mentoring platform. This helps mentors understand the context of your message. \n\n
+⭐ _*Professional Tone:*_\n Maintain a professional and courteous tone in all your messages. Address mentors with respect and gratitude for their assistance. \n\n
+⭐ _*Concise Communication:*_\n Keep your messages clear and concise. State your questions or requests succinctly to make it easier for mentors to provide valuable guidance. \n\n
+Remember that our mentors are here to help you succeed, and following these guidelines will ensure effective and respectful communication. Good luck with your mentoring journey! 🚀`
+
+        
         //print out list of ambassadors for student
         ambassadors.forEach(async ambassador => {
-           msg += `*${school.toUpperCase} Ambassador Profile* \n\n
-           *MentorID:* ${ambassador.mentorID}\n\n
-           *Name:* ${ambassador.mentorName}\n\n
-           *Interests:* ${ambassador.tags.toString()}\n\n
-           *Email:* ${ambassador.mentorEmail}\n\n
+           var msg = '';
+           msg += `*${school.toUpperCase()} Ambassador Profile* \n\n*Name:* ${ambassador.mentorName}\n\n*Interests:* ${ambassador.tags.toString()}\n\n*Email:* ${ambassador.mentorEmail}\n\n
+*Bio:*\n_${ambassador.mentorDescription}_\n\n--------\n
+_*Click the link to submit a question to this Ambassador.*_\n\n🔗: https://wa.me/${ambassador.mentorPhoneNumber}?text=Hi%20${ambassador.mentorName.replaceAll(" ", "%20")}`
 
-            ${ambassador.mentorDescription} \n\n
-           
-           Click the link to submit a question to this Ambassador.\n\n
-           🔗: https://wa.me/+14155238886?text=FAQ%20submit%20${ambassador.mentorID}`
-
-        await sendMediaMessage(phoneNumber, msg, ambassador.mentorPhoto);
+        await sendMediaMessage(phoneNumber, await msg, ambassador.mentorPhoto);
+        // await sendMessage(phoneNumber, msg);
         });
+
     }
 }
 
@@ -106,7 +111,7 @@ const listSchools = async (phoneNumber)=>{
         msg += `${index + 1}. *${school.toUpperCase()}*\n`
     })
 
-    msg += `\n\n To view ambassador profiles use the following command: _view ambassadors school_ \n\n e.g *_view ambassadors harvard_*`;
+    msg += `\n\n To view ambassador profiles use the following command: _connect student school_ \n\n e.g *_connect student harvard_*`;
 
     await sendMessage(phoneNumber, msg);
 }
