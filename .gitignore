@@ -1,4 +1,5 @@
 node_modules
 config.json
+.env
 credentials.json
 /config/google-docs-service-account.json
